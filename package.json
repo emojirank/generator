@@ -1,0 +1,24 @@
+{
+  "name": "generator",
+  "version": "0.0.1",
+  "description": "Parse the unicode emoji list and generate db + image files",
+  "main": "index.js",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "jsdom": "^9.9.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emojirank/generator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emojirank/generator/issues"
+  },
+  "homepage": "https://github.com/emojirank/generator#readme"
+}
