@@ -39,3 +39,4 @@ jspm_packages
 # emojirank
 full-emoji-list.html
 images/
+mongoinsert.js

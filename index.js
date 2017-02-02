@@ -15,6 +15,9 @@ vendors["SB"] = 13;
 vendors["DCM"] = 14;
 vendors["KDDI"] = 15;
 
+var mongo_settings = {};
+mongo_settings.collection_name = "glyphs";
+
 /*
 0 num'>№
 1 code'>Code
@@ -44,12 +47,19 @@ function parseTable() {
   for(i = 0; i < 10; i++) {
     var cells = rows[i].querySelectorAll('td');
     if (cells.length > 0) {
+      var unicode_value = cells[1].querySelector('a').getAttribute('name');
+
+      // for each vendor
       for (vendor_name in vendors) {
         var img = cells[vendors[vendor_name]].querySelector('img');
-        var unicode_value = cells[1].querySelector('a').getAttribute('name');
+
         if (img) {
           var imgsrc = img.getAttribute('src');
           writeImgSrcToFile(unicode_value + "_" + vendor_name, imgsrc);
+          writeMongoInsertStatementToFile(
+            unicode_value,
+            vendor_name,
+            cells[16].innerHTML);
         } else {
           console.log("skipping " + unicode_value + " for " + vendor_name);
         }
@@ -70,3 +80,18 @@ function writeImgSrcToFile(filename, value) {
       console.log("File saved:" + filename);
   });
 }
+
+function writeMongoInsertStatementToFile(
+  unicode_value,
+  vendor_name,
+  emoji_name) {
+    var statement = "db." + mongo_settings.collection_name + ".insert({"
+    statement += " unicode_value:\"" + unicode_value + "\", ";
+    statement += " vendor_name:\"" + vendor_name + "\", ";
+    statement += " emoji_name:\"" + emoji_name + "\"";
+    statement += "});\n"
+    console.log(statement);
+    fs.appendFile('mongoinsert.js', statement, function (err) {
+
+    });
+  }
