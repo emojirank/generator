@@ -1,5 +1,5 @@
 var jsdom = require("jsdom");
-var fs = require('fs');
+var fs = require('graceful-fs');
 
 var vendors = [];
 vendors["Apple"] = 4;
@@ -17,7 +17,13 @@ vendors["KDDI"] = 15;
 
 var mongo_settings = {};
 mongo_settings.collection_name = "glyphs";
+mongo_settings.db_name = "emojirank";
 
+fs.appendFile('mongoinsert.js', 'use emojirank\n', function (err) {
+  if(err) {
+      return console.log(err);
+  }
+});
 /*
 0 num'>№
 1 code'>Code
@@ -44,7 +50,7 @@ function parseTable() {
   console.log("there are ", rows.length, " rows");
 
   // parse each row
-  for(i = 0; i < 10; i++) {
+  for(i = 0; i < rows.length; i++) {
     var cells = rows[i].querySelectorAll('td');
     if (cells.length > 0) {
       var unicode_value = cells[1].querySelector('a').getAttribute('name');
@@ -57,6 +63,7 @@ function parseTable() {
           var imgsrc = img.getAttribute('src');
           writeImgSrcToFile(unicode_value + "_" + vendor_name, imgsrc);
           writeMongoInsertStatementToFile(
+            cells[0].innerHTML,
             unicode_value,
             vendor_name,
             cells[16].innerHTML);
@@ -82,16 +89,20 @@ function writeImgSrcToFile(filename, value) {
 }
 
 function writeMongoInsertStatementToFile(
+  unicode_line,
   unicode_value,
   vendor_name,
   emoji_name) {
     var statement = "db." + mongo_settings.collection_name + ".insert({"
+    statement += " unicode_line:\"" + unicode_line + "\", ";
     statement += " unicode_value:\"" + unicode_value + "\", ";
     statement += " vendor_name:\"" + vendor_name + "\", ";
     statement += " emoji_name:\"" + emoji_name + "\"";
     statement += "});\n"
     console.log(statement);
     fs.appendFile('mongoinsert.js', statement, function (err) {
-
+      if(err) {
+          return console.log(err);
+      }
     });
   }

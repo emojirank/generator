@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "fs": "0.0.1-security",
+    "graceful-fs": "^4.1.11",
     "jsdom": "^9.9.1"
   },
   "devDependencies": {},
