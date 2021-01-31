@@ -2,18 +2,17 @@ var jsdom = require("jsdom");
 var fs = require('graceful-fs');
 
 var vendors = [];
-vendors["Apple"] = 4;
-vendors["Google"] = 5;
-vendors["Twitter"] = 6;
-vendors["One"] = 7;
-vendors["FB"] = 8;
-vendors["FBM"] = 9;
-vendors["Samsung"] = 10;
-vendors["Windows"] = 11;
-vendors["GMail"] = 12;
-vendors["SB"] = 13;
-vendors["DCM"] = 14;
-vendors["KDDI"] = 15;
+vendors["Apple"] = 3;
+vendors["Google"] = 4;
+vendors["Facebook"] = 5;
+vendors["Windows"] = 6;
+vendors["Twitter"] = 7;
+vendors["JoyPixels"] = 8;
+vendors["Samsung"] = 9;
+vendors["GMail"] = 10;
+vendors["SB"] = 11;
+vendors["DCM"] = 12;
+vendors["KDDI"] = 13;
 
 var mongo_settings = {};
 mongo_settings.collection_name = "glyphs";
@@ -52,7 +51,7 @@ function parseTable() {
   // parse each row
   for(i = 0; i < rows.length; i++) {
     var cells = rows[i].querySelectorAll('td');
-    if (cells.length > 0) {
+    if (cells.length == 15) {
       var unicode_value = cells[1].querySelector('a').getAttribute('name');
 
       // for each vendor
@@ -66,7 +65,7 @@ function parseTable() {
             cells[0].innerHTML,
             unicode_value,
             vendor_name,
-            cells[16].innerHTML);
+            cells[14].innerHTML);
         } else {
           console.log("skipping " + unicode_value + " for " + vendor_name);
         }
