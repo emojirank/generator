@@ -1,5 +1,7 @@
 var jsdom = require("jsdom");
 var fs = require('graceful-fs');
+var sqlite3 = require('sqlite3').verbose();
+var db = new sqlite3.Database('emojirank.db');
 
 var vendors = [];
 vendors["Apple"] = 3;
@@ -14,15 +16,6 @@ vendors["SB"] = 11;
 vendors["DCM"] = 12;
 vendors["KDDI"] = 13;
 
-var mongo_settings = {};
-mongo_settings.collection_name = "glyphs";
-mongo_settings.db_name = "emojirank";
-
-fs.appendFile('mongoinsert.js', 'use emojirank\n', function (err) {
-  if(err) {
-      return console.log(err);
-  }
-});
 /*
 0 num'>№
 1 code'>Code
@@ -60,8 +53,8 @@ function parseTable() {
 
         if (img) {
           var imgsrc = img.getAttribute('src');
-          writeImgSrcToFile(unicode_value + "_" + vendor_name, imgsrc);
-          writeMongoInsertStatementToFile(
+          //writeImgSrcToFile(unicode_value + "_" + vendor_name, imgsrc);
+          insertToDB(
             cells[0].innerHTML,
             unicode_value,
             vendor_name,
@@ -85,6 +78,23 @@ function writeImgSrcToFile(filename, value) {
 
       console.log("File saved:" + filename);
   });
+}
+
+function insertToDB(unicode_line,
+  unicode_value,
+  vendor_name,
+  emoji_name) {
+    let sql = `INSERT INTO glyphs (unicode_line, unicode_value, vendor_name, emoji_name) 
+      VALUES (
+        ${unicode_line}, '${unicode_value}', 
+        '${vendor_name}', '${emoji_name}'
+        )`;
+    db.run(sql, err => {
+      if (err) {
+          console.log(err);
+          console.log(sql);
+      }
+  })
 }
 
 function writeMongoInsertStatementToFile(
