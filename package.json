@@ -6,7 +6,7 @@
   "dependencies": {
     "fs": "0.0.1-security",
     "graceful-fs": "^4.1.11",
-    "jsdom": "^16.5.0",
+    "jsdom": "^16.7.0",
     "sqlite3": "^5.1.5"
   },
   "scripts": {
